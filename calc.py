@@ -59,7 +59,7 @@ classfull = [   [sg.Text('Network Class')],
                 [sg.Radio('C', default=False, group_id='1', key='c', enable_events=True)]   ]
 
 layout = [  [sg.Text('IP Address'), sg.InputText()],
-            [sg.Radio('Classful', "RADIO1", enable_events=True, key='clsf',default=False),sg.Radio('Classless', "RADIO1", enable_events=True, key='clsl', default=False)],
+            [sg.Radio('Fixed-Length', "RADIO1", enable_events=True, key='fl',default=False),sg.Radio('Variable-Length', "RADIO1", enable_events=True, key='vl', default=False)],
             [sg.Frame('Select A Class', classfull, title_color='White'),
             sg.Frame('Select Subnet Mask', classless, title_color='White')],
             [sg.Text('Network Address'), sg.InputText(key='ntaddr')],
@@ -89,14 +89,14 @@ while True:
         break
 
     #classless selected
-    if event == 'clsl':
+    if event == 'vl':
         # window['ntaddr'].Widget.configure(state = 'normal')
         for key in key_list_class:
             window[key].update(disabled=True)
         window.Element('sbmsk').Update(values=sb_32)
 
     #classful selected
-    if event == 'clsf':
+    if event == 'fl':
         for key in key_list_class:
             window[key].update(disabled=False)
 
