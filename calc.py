@@ -12,6 +12,154 @@ sb_d = list(range(23, 13, -1))
 
 
 # methods
+def ResultFxLength(subnetmsk,no_hosts, in_type):
+    # no_hosts = values['input_host']
+
+    sbnt_str = str(toBinarySubnet(int(subnetmsk)))
+    ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
+                            for i in range(0, len(sbnt_str), 8))
+    DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
+
+    # network address get
+    bin_ip_str = getBinaryIP((values[0]))
+    y = str(bin_ip_str)[subnetmsk:32]
+    h = str(bin_ip_str)[0:subnetmsk]
+    for r in range(0, len(y)):
+        h += '0'
+    netwrk_addr = h
+    # convert
+    ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
+                                   for i in range(0, len(netwrk_addr), 8))
+    Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
+
+    # broadcast address get
+    h = str(bin_ip_str)[0:subnetmsk]
+    for r in range(0, len(y)):
+        h += '1'
+    bdcst_addr = h
+    # convert
+    ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
+                                   for i in range(0, len(bdcst_addr), 8))
+    Dec_binBrdcst_addr = getSubnetDecimal(str(ok_binBrdcst_addr))
+
+    # take 1st host
+    ip_rangeLeft = int(netwrk_addr)+1
+    ip_rangeLeft = ('{:032d}'.format(ip_rangeLeft))
+    # convert
+    ok_ip_rangeLeft = ' . '.join(ip_rangeLeft[i:i+8]
+                                 for i in range(0, len(ip_rangeLeft), 8))
+    Dec_ip_rangeLeft = getSubnetDecimal(str(ok_ip_rangeLeft))
+
+    # take last host
+    ip_rangeRight = int(bdcst_addr)-1
+    ip_rangeRight = ('{:032d}'.format(ip_rangeRight))
+    # convert
+    ok_ip_rangeRight = ' . '.join(ip_rangeRight[i:i+8]
+                                  for i in range(0, len(ip_rangeRight), 8))
+    Dec_ip_rangeRight = getSubnetDecimal(str(ok_ip_rangeRight))
+
+    # Get Wildcart
+    bin_wildcart = 11111111111111111111111111111111-int(sbnt_str)
+    bin_wildcart = ('{:032d}'.format(bin_wildcart))
+    # convert
+    ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
+                             for i in range(0, len(bin_wildcart), 8))
+    Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
+
+    if in_type=='fx_hosts':
+        host_sentence='No. of hosts:\t '+no_hosts+' max ('+str(max_hosts)+')'
+    elif in_type=='fx_sbnt':
+        host_sentence='No. of Maximum hosts:\t '+no_hosts
+
+    window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
+                                       'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
+                                       'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
+                                       host_sentence+'\n' + '\n' +
+
+                                       'Subnet Mask:\t'+DecSbnet_msk+'\n' +
+                                       'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
+                                       'CIDR Notation:\t '+'\\ ' +
+                                       str(subnetmsk)+'\n' + '\n' +
+
+                                       'Network Address:\t '+Dec_binNetwrk_addr+'\n' +
+                                       'Broadcast Addresss:\t '+Dec_binBrdcst_addr+'\n' +
+                                       'Binary Network Address:\t '+netwrk_addr+'\n' +
+                                       'Binary Broadcast Address:\t '+bdcst_addr+'\n' +
+                                       'Wildcard Mask:\t '+Dec_wildcart+'\n'
+                                       'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
+                                       )
+
+def ResultVlLength(subnetmsk,no_hosts, count):
+    # no_hosts = values['input_host']
+    sbnt_str = str(toBinarySubnet(int(subnetmsk)))
+    ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
+                            for i in range(0, len(sbnt_str), 8))
+    DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
+
+    # network address get
+    bin_ip_str = getBinaryIP((values[0]))
+    y = str(bin_ip_str)[subnetmsk:32]
+    h = str(bin_ip_str)[0:subnetmsk]
+    for r in range(0, len(y)):
+        h += '0'
+    netwrk_addr = h
+    # convert
+    ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
+                                   for i in range(0, len(netwrk_addr), 8))
+    Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
+
+    # broadcast address get
+    h = str(bin_ip_str)[0:subnetmsk]
+    for r in range(0, len(y)):
+        h += '1'
+    bdcst_addr = h
+    # convert
+    ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
+                                   for i in range(0, len(bdcst_addr), 8))
+    Dec_binBrdcst_addr = getSubnetDecimal(str(ok_binBrdcst_addr))
+
+    # take 1st host
+    ip_rangeLeft = int(netwrk_addr)+1
+    ip_rangeLeft = ('{:032d}'.format(ip_rangeLeft))
+    # convert
+    ok_ip_rangeLeft = ' . '.join(ip_rangeLeft[i:i+8]
+                                 for i in range(0, len(ip_rangeLeft), 8))
+    Dec_ip_rangeLeft = getSubnetDecimal(str(ok_ip_rangeLeft))
+
+    # take last host
+    ip_rangeRight = int(bdcst_addr)-1
+    ip_rangeRight = ('{:032d}'.format(ip_rangeRight))
+    # convert
+    ok_ip_rangeRight = ' . '.join(ip_rangeRight[i:i+8]
+                                  for i in range(0, len(ip_rangeRight), 8))
+    Dec_ip_rangeRight = getSubnetDecimal(str(ok_ip_rangeRight))
+
+    # Get Wildcart
+    bin_wildcart = 11111111111111111111111111111111-int(sbnt_str)
+    bin_wildcart = ('{:032d}'.format(bin_wildcart))
+    # convert
+    ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
+                             for i in range(0, len(bin_wildcart), 8))
+    Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
+    
+    window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
+                                       'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
+                                       'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
+                                       host_sentence+'\n' + '\n' +
+
+                                       'Subnet Mask:\t'+DecSbnet_msk+'\n' +
+                                       'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
+                                       'CIDR Notation:\t '+'\\ ' +
+                                       str(subnetmsk)+'\n' + '\n' +
+
+                                       'Network Address:\t '+Dec_binNetwrk_addr+'\n' +
+                                       'Broadcast Addresss:\t '+Dec_binBrdcst_addr+'\n' +
+                                       'Binary Network Address:\t '+netwrk_addr+'\n' +
+                                       'Binary Broadcast Address:\t '+bdcst_addr+'\n' +
+                                       'Wildcard Mask:\t '+Dec_wildcart+'\n'
+                                       'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
+                                       )
+
 
 def toBinarySubnet(num):
     ones = ''
@@ -74,7 +222,8 @@ fixedlen = [[sg.Text('Network Class')],
 varlen = [[sg.Text('Subnet Mask'),
            sg.Combo(['\t\t\t'], key='vl_sbmsk', readonly=True, enable_events=True)],
           [sg.Text('Ex: 100,12,20')],
-          [sg.Multiline('', size=(20, 5), key='vl_hosts', enable_events=True)]]
+          [sg.Multiline('', size=(20, 5), key='vl_hosts', enable_events=True)],
+          [sg.Button('ok', key='vl_ok', enable_events=True)]]
 
 
 layout = [[sg.Text('IP Address'), sg.InputText()],
@@ -90,7 +239,7 @@ layout = [[sg.Text('IP Address'), sg.InputText()],
           [sg.Text('Results')],
           [sg.Multiline('', size=(65, 15), key='resultbox')],
           [sg.Listbox(values=['Welcome Drink', 'Extra Cushions', 'Organic Diet', 'Blanket', 'Neck Rest', 'fgf',
-                      'fgfgfg', 'dfgdfg', 'weqrwer', 'reterter', 'rete'], select_mode='extended', key='fac', size=(30, 6))],
+                      'fgfgfg', 'dfgdfg', 'weqrwer', 'reterter', 'rete'], select_mode='extended', key='fac', size=(30, 6), enable_events=True)],
           [sg.Button('Ok'), sg.Button('Cancel')]]
 
 # Create the Window
@@ -146,218 +295,40 @@ while True:
             z += 1
         max_hosts = 2**z
         subnetmsk = 32-z
-        sbnt_str = str(toBinarySubnet(int(subnetmsk)))
-        ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
-                                for i in range(0, len(sbnt_str), 8))
-        DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
-
-        # network address get
-        bin_ip_str = getBinaryIP((values[0]))
-        y = str(bin_ip_str)[subnetmsk:32]
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '0'
-        netwrk_addr = h
-        # convert
-        ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
-                                       for i in range(0, len(netwrk_addr), 8))
-        Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
-
-        # broadcast address get
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '1'
-        bdcst_addr = h
-        # convert
-        ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
-                                       for i in range(0, len(bdcst_addr), 8))
-        Dec_binBrdcst_addr = getSubnetDecimal(str(ok_binBrdcst_addr))
-
-        # take 1st host
-        ip_rangeLeft = int(netwrk_addr)+1
-        ip_rangeLeft = ('{:032d}'.format(ip_rangeLeft))
-        # convert
-        ok_ip_rangeLeft = ' . '.join(ip_rangeLeft[i:i+8]
-                                     for i in range(0, len(ip_rangeLeft), 8))
-        Dec_ip_rangeLeft = getSubnetDecimal(str(ok_ip_rangeLeft))
-
-        # take last host
-        ip_rangeRight = int(bdcst_addr)-1
-        ip_rangeRight = ('{:032d}'.format(ip_rangeRight))
-        # convert
-        ok_ip_rangeRight = ' . '.join(ip_rangeRight[i:i+8]
-                                      for i in range(0, len(ip_rangeRight), 8))
-        Dec_ip_rangeRight = getSubnetDecimal(str(ok_ip_rangeRight))
-
-        # Get Wildcart
-        bin_wildcart = 11111111111111111111111111111111-int(sbnt_str)
-        bin_wildcart = ('{:032d}'.format(bin_wildcart))
-        # convert
-        ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
-                                 for i in range(0, len(bin_wildcart), 8))
-        Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
-
-        window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
-                                           'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
-                                           'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
-                                           'No. of hosts:\t '+no_hosts+' max ('+str(max_hosts)+')'+'\n' + '\n' +
-
-                                           'Subnet Mask:\t'+DecSbnet_msk+'\n' +
-                                           'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
-                                           'CIDR Notation:\t '+'\\ ' +
-                                           str(subnetmsk)+'\n' + '\n' +
-
-                                           'Network Address:\t '+Dec_binNetwrk_addr+'\n' +
-                                           'Broadcast Addresss:\t '+Dec_binBrdcst_addr+'\n' +
-                                           'Binary Network Address:\t '+netwrk_addr+'\n' +
-                                           'Binary Broadcast Address:\t '+bdcst_addr+'\n' +
-                                           'Wildcard Mask:\t '+Dec_wildcart+'\n'
-                                           'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
-                                           )
+        ResultFxLength(subnetmsk,no_hosts,'fx_hosts')
 
     if event == 'sbmsk':
         subnetmsk = values['sbmsk']
         no_hosts = str((2**(32-subnetmsk))-2)
-        sbnt_str = str(toBinarySubnet(int(subnetmsk)))
-        ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
-                                for i in range(0, len(sbnt_str), 8))
-        DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
+        ResultFxLength(subnetmsk,no_hosts,'fx_sbnt')
+        
 
-        # network address get
-        bin_ip_str = getBinaryIP((values[0]))
-        y = str(bin_ip_str)[subnetmsk:32]
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '0'
-        netwrk_addr = h
-        # convert
-        ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
-                                       for i in range(0, len(netwrk_addr), 8))
-        Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
-
-        # broadcast address get
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '1'
-        bdcst_addr = h
-        # convert
-        ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
-                                       for i in range(0, len(bdcst_addr), 8))
-        Dec_binBrdcst_addr = getSubnetDecimal(str(ok_binBrdcst_addr))
-
-        # take 1st host
-        ip_rangeLeft = int(netwrk_addr)+1
-        ip_rangeLeft = ('{:032d}'.format(ip_rangeLeft))
-        # convert
-        ok_ip_rangeLeft = ' . '.join(ip_rangeLeft[i:i+8]
-                                     for i in range(0, len(ip_rangeLeft), 8))
-        Dec_ip_rangeLeft = getSubnetDecimal(str(ok_ip_rangeLeft))
-
-        # take last host
-        ip_rangeRight = int(bdcst_addr)-1
-        ip_rangeRight = ('{:032d}'.format(ip_rangeRight))
-        # convert
-        ok_ip_rangeRight = ' . '.join(ip_rangeRight[i:i+8]
-                                      for i in range(0, len(ip_rangeRight), 8))
-        Dec_ip_rangeRight = getSubnetDecimal(str(ok_ip_rangeRight))
-
-        # Get Wildcart
-        bin_wildcart = 11111111111111111111111111111111-int(sbnt_str)
-        bin_wildcart = ('{:032d}'.format(bin_wildcart))
-        # convert
-        ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
-                                 for i in range(0, len(bin_wildcart), 8))
-        Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
-
-        window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
-                                           'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
-                                           'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
-                                           'No. of Maximum hosts:\t '+no_hosts+'\n'+'\n' +
-
-                                           'Subnet Mask:\t'+DecSbnet_msk+'\n' +
-                                           'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
-                                           'CIDR Notation:\t '+'\\ ' +
-                                           str(subnetmsk)+'\n' + '\n' +
-
-                                           'Network Address:\t '+Dec_binNetwrk_addr+'\n' +
-                                           'Broadcast Addresss:\t '+Dec_binBrdcst_addr+'\n' +
-                                           'Binary Network Address:\t '+netwrk_addr+'\n' +
-                                           'Binary Broadcast Address:\t '+bdcst_addr+'\n' +
-                                           'Wildcard Mask:\t '+Dec_wildcart+'\n'
-                                           'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
-                                           )
     if event == 'vl_hosts':
-        no_hosts = values['vl_hosts']
-        subnetmsk = values['sbmsk']
-        no_hosts = str((2**(32-subnetmsk))-2)
-        sbnt_str = str(toBinarySubnet(int(subnetmsk)))
-        ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
-                                for i in range(0, len(sbnt_str), 8))
-        DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
+        all_hosts = values['vl_hosts']
+        split_all_hosts=all_hosts.split(',')
+        # subnetmsk_main = values['vl_sbmsk']
 
-        # network address get
-        bin_ip_str = getBinaryIP((values[0]))
-        y = str(bin_ip_str)[subnetmsk:32]
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '0'
-        netwrk_addr = h
-        # convert
-        ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
-                                       for i in range(0, len(netwrk_addr), 8))
-        Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
+        for x in (split_all_hosts):
+            if x!='':
+                z = 1
+                while (2**z) < int(x)+2:
+                    z += 1
+                max_hosts = 2**z
+                subnetmsk = 32-z
 
-        # broadcast address get
-        h = str(bin_ip_str)[0:subnetmsk]
-        for r in range(0, len(y)):
-            h += '1'
-        bdcst_addr = h
-        # convert
-        ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
-                                       for i in range(0, len(bdcst_addr), 8))
-        Dec_binBrdcst_addr = getSubnetDecimal(str(ok_binBrdcst_addr))
+                # subnetmsk = values['vl_sbmsk']
+                no_hosts =x
+                listbox_str=split_all_hosts
+                window.Element('fac').Update(listbox_str)
+    if values['fac']:    # if something is highlighted in the list
+        s=str(values['fac'][0])
+        print('ddddddd:'+s)
+            
+            # ResultFxLength (subnetmsk,no_hosts, 'in_type')
 
-        # take 1st host
-        ip_rangeLeft = int(netwrk_addr)+1
-        ip_rangeLeft = ('{:032d}'.format(ip_rangeLeft))
-        # convert
-        ok_ip_rangeLeft = ' . '.join(ip_rangeLeft[i:i+8]
-                                     for i in range(0, len(ip_rangeLeft), 8))
-        Dec_ip_rangeLeft = getSubnetDecimal(str(ok_ip_rangeLeft))
-
-        # take last host
-        ip_rangeRight = int(bdcst_addr)-1
-        ip_rangeRight = ('{:032d}'.format(ip_rangeRight))
-        # convert
-        ok_ip_rangeRight = ' . '.join(ip_rangeRight[i:i+8]
-                                      for i in range(0, len(ip_rangeRight), 8))
-        Dec_ip_rangeRight = getSubnetDecimal(str(ok_ip_rangeRight))
-
-        # Get Wildcart
-        bin_wildcart = 11111111111111111111111111111111-int(sbnt_str)
-        bin_wildcart = ('{:032d}'.format(bin_wildcart))
-        # convert
-        ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
-                                 for i in range(0, len(bin_wildcart), 8))
-        Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
-
-        window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
-                                           'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
-                                           'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
-                                           'No. of Maximum hosts:\t '+no_hosts+'\n'+'\n' +
-
-                                           'Subnet Mask:\t'+DecSbnet_msk+'\n' +
-                                           'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
-                                           'CIDR Notation:\t '+'\\ ' +
-                                           str(subnetmsk)+'\n' + '\n' +
-
-                                           'Network Address:\t '+Dec_binNetwrk_addr+'\n' +
-                                           'Broadcast Addresss:\t '+Dec_binBrdcst_addr+'\n' +
-                                           'Binary Network Address:\t '+netwrk_addr+'\n' +
-                                           'Binary Broadcast Address:\t '+bdcst_addr+'\n' +
-                                           'Wildcard Mask:\t '+Dec_wildcart+'\n'
-                                           'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
-                                           )
+    # if values['fac']:    # if something is highlighted in the list
+    #     s=str(values['fac'][0])
+    #     print('ddddddd:'+s)
 
     # I run when clicked
     # sb_load()
