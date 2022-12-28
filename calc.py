@@ -21,7 +21,8 @@ def ResultFxLength(subnetmsk,no_hosts, in_type):
     DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
 
     # network address get
-    bin_ip_str = getBinaryIP((values[0]))
+    
+    bin_ip_str = getBinaryIP(User_IP)
     y = str(bin_ip_str)[subnetmsk:32]
     h = str(bin_ip_str)[0:subnetmsk]
     for r in range(0, len(y)):
@@ -295,6 +296,7 @@ while True:
             z += 1
         max_hosts = 2**z
         subnetmsk = 32-z
+        User_IP=(values[0])
         ResultFxLength(subnetmsk,no_hosts,'fx_hosts')
 
     if event == 'sbmsk':
@@ -306,6 +308,14 @@ while True:
     if event == 'vl_hosts':
         all_hosts = values['vl_hosts']
         split_all_hosts=all_hosts.split(',')
+        
+        len_split_all_hosts = len(split_all_hosts)
+        list_val = []
+        char_c=0
+        for v in split_all_hosts:
+            if v!='':
+                list_val.append(chr(char_c+65)+' '+str(v))
+                char_c+=1
         # subnetmsk_main = values['vl_sbmsk']
 
         for x in (split_all_hosts):
@@ -318,13 +328,14 @@ while True:
 
                 # subnetmsk = values['vl_sbmsk']
                 no_hosts =x
-                listbox_str=split_all_hosts
+                listbox_str=list_val
                 window.Element('fac').Update(listbox_str)
+
     if values['fac']:    # if something is highlighted in the list
         s=str(values['fac'][0])
-        print('ddddddd:'+s)
-            
-            # ResultFxLength (subnetmsk,no_hosts, 'in_type')
+        split_s=s.split(' ')
+        print(split_s)
+        # ResultFxLength(subnetmsk,no_hosts,'fx_hosts')
 
     # if values['fac']:    # if something is highlighted in the list
     #     s=str(values['fac'][0])
