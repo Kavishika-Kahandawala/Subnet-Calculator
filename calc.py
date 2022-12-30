@@ -32,7 +32,7 @@ def ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, in_type):
             h += '0'
             netwrk_addr = h
     elif in_type == ('vl_hosts'):
-        h = 'make network addr'
+        netwrk_addr = 'make network addr'
 
     # convert
     ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
@@ -339,19 +339,20 @@ while True:
     
     #fl option sbnts amount
     if event == 'sbnts_Amount':
-        try:
-            no_sbnts = values['input_host']
+        # try:
+            no_sbnts = values['sbnts_Amount']
             z = 1
-            while (2**z) < int(values['input_host']):
+            while (2**z) < int(values['sbnts_Amount']):
                 z += 1
-            no_sbnts = 2**z
-            subnetmsk = 32-z
-            sbnts_Amount=0
+            sbnts_Amount = 2**z
+            subnetmsk = int(values['sbmsk_main'])+z
+            no_hosts=str((2**(32-subnetmsk))-2)
+
 						   
-            ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, 'fx_hosts')
-        except:
-            sg.popup("Enter Integer only there")
-            print("Probably typed a string\t No Strings allowed")
+            ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, 'fx_sbnts')
+        # except:
+        #     sg.popup("Enter Integer only there")
+        #     print("Probably typed a string\t No Strings allowed")
 
 
     #fl option sbnt msk
