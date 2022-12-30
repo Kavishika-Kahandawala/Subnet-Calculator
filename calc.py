@@ -12,7 +12,7 @@ sb_d = list(range(23, 13, -1))
 
 
 # methods
-def ResultFxLength(subnetmsk, no_hosts, in_type):
+def ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, in_type):
     # no_hosts = values['input_host']
 
     sbnt_str = str(toBinarySubnet(int(subnetmsk)))
@@ -240,11 +240,11 @@ layout = [[sg.Text('IP Address'), sg.InputText(), sg.Text('Subnet Mask'), sg.Com
           [sg.Frame('Select A Class', fixedlen, title_color='White'),
            sg.Frame('Type needed no of hosts', varlen, title_color='White')],
           [sg.Text('Subnet Mask'), sg.Combo(
-              ['\t\t\t'], key='sbmsk', readonly=True, enable_events=True)],
+              sb_32, key='sbmsk', readonly=True, enable_events=True)],
           [sg.Text('No. of Hosts '), sg.InputText(
               '', size=(10, 1), key='input_host', enable_events=True)],
-          [sg.Text('No. of Subnets'), sg.Combo(
-              ['\t\t\t'], key='sbnt_amount', readonly=True, enable_events=True)],
+          [sg.Text('No. of Subnets '), sg.InputText(
+              '', size=(10, 1), key='sbnts_Amount', enable_events=True)],
           [sg.Text('\n')],
           [sg.Text('Results')],
           [sg.Multiline('', size=(65, 15), key='resultbox')],
@@ -314,32 +314,53 @@ while True:
 
     if event == 'any':
         pass
-        # window.Element('sbmsk').Update(values=sb_32)
+        window.Element('sbmsk').Update(values=sb_32)
 
     # event happens when press enter
     # if event == 'no_hosts' + '_Enter':
     #     selected_sbmskk=values['sbmsk']
     #     print (selected_sbmskk)
 
+    #fl option host
     if event == 'input_host':
-        # try:
+        try:
             no_hosts = values['input_host']
             z = 1
             while (2**z) < int(values['input_host'])+2:
                 z += 1
             max_hosts = 2**z
             subnetmsk = 32-z
+            sbnts_Amount=0
 						   
-            ResultFxLength(subnetmsk, no_hosts, 'fx_hosts')
-        # except:
-        #     print("Probably typed a string\t No Strings allowed")
-        # else:
-        #     print("c")
+            ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, 'fx_hosts')
+        except:
+            sg.popup("Enter Integer only there")
+            print("Probably typed a string\t No Strings allowed")
+    
+    #fl option sbnts amount
+    if event == 'sbnts_Amount':
+        try:
+            no_sbnts = values['input_host']
+            z = 1
+            while (2**z) < int(values['input_host']):
+                z += 1
+            no_sbnts = 2**z
+            subnetmsk = 32-z
+            sbnts_Amount=0
+						   
+            ResultFxLength(subnetmsk, no_hosts, sbnts_Amount, 'fx_hosts')
+        except:
+            sg.popup("Enter Integer only there")
+            print("Probably typed a string\t No Strings allowed")
 
+
+    #fl option sbnt msk
     if event == 'sbmsk':
         subnetmsk = values['sbmsk']
         no_hosts = str((2**(32-subnetmsk))-2)
-        ResultFxLength(subnetmsk, no_hosts, 'fx_sbnt')
+        sbnts_Amount=0
+        ResultFxLength(subnetmsk, no_hosts, sbnts_Amount,  'fx_sbnt')
+
 		
 
     if event == 'vl_hosts':
