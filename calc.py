@@ -12,7 +12,7 @@ sb_d = list(range(23, 13, -1))
 
 
 # methods
-def ResultFxLength(subnetmsk,no_hosts, in_type):
+def ResultFxLength(subnetmsk, no_hosts, in_type):
     # no_hosts = values['input_host']
 
     sbnt_str = str(toBinarySubnet(int(subnetmsk)))
@@ -21,23 +21,29 @@ def ResultFxLength(subnetmsk,no_hosts, in_type):
     DecSbnet_msk = getSubnetDecimal(str(ok_binsbnt))
 
     # network address get
-    
-    bin_ip_str = getBinaryIP(User_IP)
+	
+    bin_ip_str = getBinaryIP((values[0]))
+    # h=network addr , y=ok subnt msk
     y = str(bin_ip_str)[subnetmsk:32]
-    h = str(bin_ip_str)[0:subnetmsk]
-    for r in range(0, len(y)):
-        h += '0'
-    netwrk_addr = h
+
+    if in_type == 'fx_hosts' or in_type == 'fx_sbnt':
+        h = str(bin_ip_str)[0:subnetmsk]
+        for r in range(0, len(y)):
+            h += '0'
+            netwrk_addr = h
+    elif in_type == ('vl_hosts'):
+        h = 'make network addr'
+
     # convert
     ok_binNetwrk_addr = ' . '.join(netwrk_addr[i:i+8]
                                    for i in range(0, len(netwrk_addr), 8))
     Dec_binNetwrk_addr = getSubnetDecimal(str(ok_binNetwrk_addr))
 
     # broadcast address get
-    h = str(bin_ip_str)[0:subnetmsk]
+    b = str(bin_ip_str)[0:subnetmsk]
     for r in range(0, len(y)):
-        h += '1'
-    bdcst_addr = h
+        b += '1'
+    bdcst_addr = b
     # convert
     ok_binBrdcst_addr = ' . '.join(bdcst_addr[i:i+8]
                                    for i in range(0, len(bdcst_addr), 8))
@@ -67,12 +73,12 @@ def ResultFxLength(subnetmsk,no_hosts, in_type):
                              for i in range(0, len(bin_wildcart), 8))
     Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
 
-    if in_type=='fx_hosts':
-        host_sentence='No. of hosts:\t '+no_hosts+' max ('+str(max_hosts)+')'
-    elif in_type=='fx_sbnt':
-        host_sentence='No. of Maximum hosts:\t '+no_hosts
+    if in_type == 'fx_hosts':
+        host_sentence = 'No. of hosts:\t '+no_hosts+' max ('+str(max_hosts)+')'
+    elif in_type == 'fx_sbnt':
+        host_sentence = 'No. of Maximum hosts:\t '+no_hosts
 
-    window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
+    window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_ip_rangeLeft+' - '+Dec_ip_rangeRight+'\n' +
                                        'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
                                        'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
                                        host_sentence+'\n' + '\n' +
@@ -90,7 +96,8 @@ def ResultFxLength(subnetmsk,no_hosts, in_type):
                                        'Wildcard Mask in Binary:\t '+bin_wildcart+'\n'
                                        )
 
-def ResultVlLength(subnetmsk,no_hosts, count):
+
+def ResultVlLength(subnetmsk, no_hosts, count):
     # no_hosts = values['input_host']
     sbnt_str = str(toBinarySubnet(int(subnetmsk)))
     ok_binsbnt = ' . '.join(sbnt_str[i:i+8]
@@ -142,11 +149,11 @@ def ResultVlLength(subnetmsk,no_hosts, count):
     ok_wildcart = ' . '.join(bin_wildcart[i:i+8]
                              for i in range(0, len(bin_wildcart), 8))
     Dec_wildcart = getSubnetDecimal(str(ok_wildcart))
-    
+
     window.Element('resultbox').Update(value='Host IP Range:\t '+Dec_binNetwrk_addr+' - '+Dec_binBrdcst_addr+'\n' +
                                        'First usable Host IP in Binary:\t '+ip_rangeLeft+'\n' +
                                        'Last usable Host IP in Binary:\t '+ip_rangeRight+'\n' +
-                                       host_sentence+'\n' + '\n' +
+                                       #    host_sentence+'\n' + '\n' +
 
                                        'Subnet Mask:\t'+DecSbnet_msk+'\n' +
                                        'Binary Subnet Mask: \t'+ok_binsbnt+'\n' +
@@ -227,7 +234,7 @@ varlen = [[sg.Text('Subnet Mask'),
           [sg.Button('ok', key='vl_ok', enable_events=True)]]
 
 
-layout = [[sg.Text('IP Address'), sg.InputText()],
+layout = [[sg.Text('IP Address'), sg.InputText(), sg.Text('Subnet Mask'), sg.Combo(sb_32, key='sbmsk_main', readonly=True, enable_events=True)],
           [sg.Radio('Fixed-Length', "RADIO1", enable_events=True, key='fl', default=False),
            sg.Radio('Variable-Length', "RADIO1", enable_events=True, key='vl', default=False)],
           [sg.Frame('Select A Class', fixedlen, title_color='White'),
@@ -236,11 +243,13 @@ layout = [[sg.Text('IP Address'), sg.InputText()],
               ['\t\t\t'], key='sbmsk', readonly=True, enable_events=True)],
           [sg.Text('No. of Hosts '), sg.InputText(
               '', size=(10, 1), key='input_host', enable_events=True)],
+          [sg.Text('No. of Subnets'), sg.Combo(
+              ['\t\t\t'], key='sbnt_amount', readonly=True, enable_events=True)],
           [sg.Text('\n')],
           [sg.Text('Results')],
           [sg.Multiline('', size=(65, 15), key='resultbox')],
-          [sg.Listbox(values=['Welcome Drink', 'Extra Cushions', 'Organic Diet', 'Blanket', 'Neck Rest', 'fgf',
-                      'fgfgfg', 'dfgdfg', 'weqrwer', 'reterter', 'rete'], select_mode='extended', key='fac', size=(30, 6), enable_events=True)],
+          [sg.Listbox(values=[''], select_mode='extended',
+                      key='fac', size=(30, 6), enable_events=True)],
           [sg.Button('Ok'), sg.Button('Cancel')]]
 
 # Create the Window
@@ -270,19 +279,42 @@ while True:
     if event == 'fl':
         for key in key_list_class:
             window[key].update(disabled=False)
+            window.Element('any').update(value=True)
 
     # change sbnet by class
     if event == 'a':
+        user_class = ' Class A '
+        user_subnetmsk = values['sbmsk_main']
+        if user_subnetmsk in sb_a:
+            pass
+        else:
+            sg.popup_error('Selected Subnet Mask is invalid for', 'Class A ', 'Please Select a subnet between 32-8',
+                           title='Error')
         window.Element('sbmsk').Update(values=sb_a)
 
     if event == 'b':
+        user_class = ' Class B '
+        user_subnetmsk = values['sbmsk_main']
+        if user_subnetmsk in sb_b:
+            pass
+        else:
+            sg.popup_error('Selected Subnet Mask is invalid for', 'Class B ', 'Please Select a subnet between 32-16 ',
+                           title='Error')
         window.Element('sbmsk').Update(values=sb_b)
 
     if event == 'c':
+        user_class = ' Class C '
+        user_subnetmsk = values['sbmsk_main']
+        if user_subnetmsk in sb_b:
+            pass
+        else:
+            sg.popup_error('Selected Subnet Mask is invalid for', 'Class C ', 'Please Select a subnet between 32-24 ',
+                           title='Error')
         window.Element('sbmsk').Update(values=sb_c)
 
     if event == 'any':
-        window.Element('sbmsk').Update(values=sb_32)
+        pass
+        # window.Element('sbmsk').Update(values=sb_32)
 
     # event happens when press enter
     # if event == 'no_hosts' + '_Enter':
@@ -290,60 +322,96 @@ while True:
     #     print (selected_sbmskk)
 
     if event == 'input_host':
-        no_hosts = values['input_host']
-        z = 1
-        while (2**z) < int(values['input_host'])+2:
-            z += 1
-        max_hosts = 2**z
-        subnetmsk = 32-z
-        User_IP=(values[0])
-        ResultFxLength(subnetmsk,no_hosts,'fx_hosts')
+        # try:
+            no_hosts = values['input_host']
+            z = 1
+            while (2**z) < int(values['input_host'])+2:
+                z += 1
+            max_hosts = 2**z
+            subnetmsk = 32-z
+						   
+            ResultFxLength(subnetmsk, no_hosts, 'fx_hosts')
+        # except:
+        #     print("Probably typed a string\t No Strings allowed")
+        # else:
+        #     print("c")
 
     if event == 'sbmsk':
         subnetmsk = values['sbmsk']
         no_hosts = str((2**(32-subnetmsk))-2)
-        ResultFxLength(subnetmsk,no_hosts,'fx_sbnt')
-        
+        ResultFxLength(subnetmsk, no_hosts, 'fx_sbnt')
+		
 
     if event == 'vl_hosts':
         all_hosts = values['vl_hosts']
-        split_all_hosts=all_hosts.split(',')
-        
+
+        split_all_hosts = all_hosts.split(',')
+
+        try:
+            split_all_hosts = list(filter(None, split_all_hosts))
+            split_all_hosts = list(map(int, split_all_hosts))
+            split_all_hosts.sort()
+        except:
+            print("Probably typed a string\t No Strings allowed")
+
         len_split_all_hosts = len(split_all_hosts)
         list_val = []
-        char_c=0
+        char_c = 0
         for v in split_all_hosts:
-            if v!='':
+            if v != '':
                 list_val.append(chr(char_c+65)+' '+str(v))
-                char_c+=1
+                char_c += 1
         # subnetmsk_main = values['vl_sbmsk']
 
-        for x in (split_all_hosts):
-            if x!='':
-                z = 1
-                while (2**z) < int(x)+2:
-                    z += 1
-                max_hosts = 2**z
-                subnetmsk = 32-z
+        try:
+            for x in (split_all_hosts):
+                if x != '':
+                    z = 1
+                    while (2**z) < int(x)+2:
+                        z += 1
+                    max_hosts = 2**z
+                    subnetmsk = 32-z
 
-                # subnetmsk = values['vl_sbmsk']
-                no_hosts =x
-                listbox_str=list_val
-                window.Element('fac').Update(listbox_str)
+                    # network addr making
+                    User_IP = (values[0])
+									
+														 
+
+                    # y = str(bin_ip_str)[subnetmsk:32]
+                    # h = str(bin_ip_str)[0:subnetmsk]
+                    # for r in range(0, len(y)):
+                    #     h += '0'
+                    # netwrk_addr = h
+
+                    # subnetmsk = values['vl_sbmsk']
+                    no_hosts = x
+                    listbox_str = list_val
+                    window.Element('fac').Update(listbox_str)
+        except:
+            print("Probably typed a string\t No Strings allowed")
 
     if values['fac']:    # if something is highlighted in the list
-        s=str(values['fac'][0])
-        split_s=s.split(' ')
+        s = str(values['fac'][0])
+        split_s = s.split(' ')
         print(split_s)
         # ResultFxLength(subnetmsk,no_hosts,'fx_hosts')
 
-    # if values['fac']:    # if something is highlighted in the list
-    #     s=str(values['fac'][0])
-    #     print('ddddddd:'+s)
+    if event == 'vl_ok':
+        pass
+							 
 
-    # I run when clicked
-    # sb_load()
+        # window.Element('sbmsk').update(set_to_index=3)
+			   
 
-    # print('You entered ', values[0])
+        # window.Element('sbmsk').Update(values=sb_a)
+
+        # if values['fac']:    # if something is highlighted in the list
+        #     s=str(values['fac'][0])
+        #     print('ddddddd:'+s)
+
+        # I run when clicked
+        # sb_load()
+
+        # print('You entered ', values[0])
 
 window.close()
